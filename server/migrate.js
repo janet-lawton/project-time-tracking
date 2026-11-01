@@ -1,7 +1,8 @@
 const Database = require('better-sqlite3');
 const db = new Database('invoice_app.db');
 
-const BASE_URL = 'https://project-time-tracking-production.up.railway.app/api';
+require('dotenv').config();
+const BASE_URL = process.env.BASE_URL || 'http://localhost:3001';
 
 async function main() {
   const projectIdMap = {};
