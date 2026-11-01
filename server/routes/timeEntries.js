@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const db = require('../db');
+const requireAdmin = require('../middleware/requireAdmin');
 
 // POST / - Start a new segment for a task
 router.post('/', (req, res) => {
@@ -95,7 +96,7 @@ router.put('/:id', (req, res) => {
 });
 
 // DELETE /:id - Delete a time entry (only if not locked)
-router.delete('/:id', (req, res) => {
+router.delete('/:id', requireAdmin, (req, res) => {
   const entry = db.prepare('SELECT * FROM time_entries WHERE id = ?').get(req.params.id);
   if (!entry) {
     return res.status(404).json({ error: 'Time entry not found' });

@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const db = require('../db');
+const requireAdmin = require('../middleware/requireAdmin');
 
 router.get('/', (req, res) => {
   const categories = db.prepare('SELECT * FROM task_categories ORDER BY name').all();
@@ -26,7 +27,7 @@ router.post('/', (req, res) => {
   }
 });
 
-router.delete('/:id', (req, res) => {
+router.delete('/:id', requireAdmin, (req, res) => {
   const result = db.prepare('DELETE FROM task_categories WHERE id = ?').run(req.params.id);
   if (result.changes === 0) {
     return res.status(404).json({ error: 'Category not found' });

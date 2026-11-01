@@ -5,6 +5,7 @@ const puppeteer = require('puppeteer-core');
 const chromium = require('@sparticuz/chromium');
 const { Resend } = require('resend');
 const resend = new Resend(process.env.RESEND_API_KEY);
+const requireAdmin = require('../middleware/requireAdmin');
 
 // Generate next invoice number, e.g. INV-0001
 function nextInvoiceNumber() {
@@ -233,7 +234,7 @@ router.get('/:id/download', async (req, res) => {
 });
 
 // SEND — email the invoice to the client
-router.post('/:id/send', async (req, res) => {
+router.post('/:id/send', requireAdmin, async (req, res) => {
   const invoice = db.prepare(`
     SELECT i.*, p.name AS project_name, c.name AS client_name, c.email AS client_email, c.billing_address
     FROM invoices i

@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const db = require('../db');
+const requireAdmin = require('../middleware/requireAdmin');
 
 router.post('/', (req, res) => {
   const { name, email, billing_address, default_hourly_rate, currency } = req.body;
@@ -44,7 +45,7 @@ router.put('/:id', (req, res) => {
   res.json(updated);
 });
 
-router.delete('/:id', (req, res) => {
+router.delete('/:id', requireAdmin, (req, res) => {
   const result = db.prepare('DELETE FROM clients WHERE id = ?').run(req.params.id);
   if (result.changes === 0) return res.status(404).json({ error: 'Client not found' });
   res.json({ message: 'Client deleted successfully' });

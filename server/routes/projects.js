@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const db = require('../db');
+const requireAdmin = require('../middleware/requireAdmin');
 
 // GET all projects
 router.get('/', (req, res) => {
@@ -125,7 +126,7 @@ router.put('/:id', (req, res) => {
 });
 
 // DELETE project
-router.delete('/:id', (req, res) => {
+router.delete('/:id', requireAdmin, (req, res) => {
   try {
     // Check if project has time entries
     const checkStmt = db.prepare(`
